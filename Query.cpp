@@ -19,9 +19,12 @@ Query::~Query(void)
 PostingList * Query::readPosting(ifstream& in, int termId)
 {
 	PostingList * posting = NULL;
-	/*
-	 * TODO: Your code here
-	 */
+	
+	// TODO: Your code here
+	// Write a posting list with a given termID from the file
+	// You should seek to the file position of this specific
+	// posting list and read it back.
+
 	return posting;
 }
 
@@ -35,6 +38,9 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 	/*
 	 * TODO: Your code here
 	 */
+
+
+
 	return p;
 }
 

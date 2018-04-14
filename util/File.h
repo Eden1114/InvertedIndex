@@ -27,8 +27,8 @@ private:
 public:
 	File(string path = "");
 	File(string parent, string child);
-	File(File &parent, string child);
-	File(const File& another);
+	File(File & parent, string child);
+	File(const File  & another);
 	~File(void);
 
 	File& operator= (const File & rh);

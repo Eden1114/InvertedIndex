@@ -14,10 +14,13 @@ class Query
 private:
 	// Term id -> position in index file
 	 map<int, long> posDict;
+
 	// Term id -> document frequency
 	map<int, int> freqDict;
+	
 	// Doc id -> doc name dictionary
 	map<int, string> docDict;
+	
 	// Term -> term id dictionary
 	map<string, int> termDict;
 	
@@ -33,6 +36,6 @@ public:
 	Query(BaseIndex* index, File& input);
 	~Query(void);
 
-	void execute() ;
+	void execute();
 
 };

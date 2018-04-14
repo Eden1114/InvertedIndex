@@ -47,6 +47,17 @@ void IndexCompression::gapDecode(int inputGapsOutputDocIds[], int len) {
 	 
   }
 
+   int IndexCompression::VBEncodeInteger(int gap, unsigned char outputVBCode[])
+   {
+	   //TODO: 
+	   return 0;
+   }
+
+   void IndexCompression::VBDecodeInteger(unsigned char inputVBCode[], int startIndex, int numberEndIndex[])
+   {
+	   // TODO:
+   }
+
 
 
  /**

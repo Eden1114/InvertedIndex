@@ -1,13 +1,15 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BasicIndex.h"
 
 
 BasicIndex::BasicIndex(void)
 {
+
 }
 
 BasicIndex::~BasicIndex(void)
 {
+
 }
 
 

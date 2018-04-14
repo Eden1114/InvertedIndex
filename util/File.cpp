@@ -1,7 +1,6 @@
-#include "StdAfx.h"
+#include "..\stdafx.h"
 #include "File.h"
-#include <direct.h>
-#include <assert.h>
+
 
 File::File(string path) 
 {
