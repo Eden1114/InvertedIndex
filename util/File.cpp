@@ -1,7 +1,11 @@
-#include "..\stdafx.h"
+#include "stdafx.h"
+#include <windows.h>
 #include "File.h"
 
-
+/*
+ 构造函数
+ 参数：路径名称(string)
+ */
 File::File(string path) 
 {
 	pathName = path;
@@ -16,7 +20,11 @@ File::File(string path)
 
 
 
-
+/*
+构造函数
+参数：父路径(string)，子路径(string)
+等价于File(parent + "/" + "child");
+*/
 File::File(string parent, string child) 
 {
 	pathName = parent + "/" + child;
@@ -30,6 +38,7 @@ File::File(File& parent, string child)
 	initFile();
 }
 
+
 void File::setToFile( string path) {
 	if(hFindFileInDir != INVALID_HANDLE_VALUE) {
 		FindClose(hFindFileInDir);
@@ -38,8 +47,12 @@ void File::setToFile( string path) {
 	initFile();
 }
 
+/*
+ 初始化文件
+ */
 void File::initFile() {
 	
+	//从路径名称中提取文件名
 	int index = pathName.find_last_of('/');
 	if(index < 0) {
 		fileName = pathName;
@@ -55,7 +68,8 @@ void File::initFile() {
 		exist = false;
 		return;
 	}
-	exist = true;
+	//
+	this->exist = true;
 	type =  fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY  ? FT_DIR : FT_FILE;	
 	fileName = fd.cFileName;
 
@@ -169,6 +183,3 @@ File File::nextFileInDir() {
 	}
 	return file;
 }
-
-
-

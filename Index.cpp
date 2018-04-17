@@ -17,45 +17,65 @@ Index::~Index(void)
 }
 
 void Index::writePosting(ofstream &out, PostingList* posting) {
-	/*
-	* TODO: Your code here
-	*	 
-	*/
+	//Your code here.
+
+
 }
 
-/* BSBI indexing algorithm */
+/* 
+   BSBI indexing algorithm
+   从block中建立posting list.
+ */
 void Index::BSBI() {
-
 	File block = rootdir.firstFileInDir();
+	//从文件目录下依次访问block(即文件夹)
+
+	//输出中间信息以调试
+	//cout << "2.执行到这啦！" << endl;
+
 	while(block.exists()) {
+		// postinglists is used to store postinglist for each term in a block. 
+		list<PostingList*> postinglists;
 
-		/*
-		  *     postinglists is used to store postinglist for each term in a block.
-		  *    
-		  */
-		list<PostingList*> postinglists;   //Here you can use any data structure  you want other than list.
- 
+		//Here you can use any data structure  you want other than list.
 		File blockFile (outdir, block.getName());
-		blockQueue.push(blockFile);
 
+		blockQueue.push(blockFile);
 		File  blockDir(rootdir, block.getName());
 		File file = blockDir.firstFileInDir();
+		
+		//输出中间信息以调试
+		//cout << "3.执行到这啦！" << endl;
+
 		while(file.exists())
 		{
 			++totalFileCount;
 			docDict[file.getPathName()] =  docIdCounter++;
+			//将文档名和docId绑定
 
 			ifstream reader(file.getPathName().c_str());
 			
+			//输出中间信息以调试
+			cout << file.getPathName().c_str() << endl;
+			cout << file.getName().c_str() << endl;
+			
 			while(!reader.eof()) {
+				//输出中间信息以调试
+				//cout << "4.执行到这啦！" << endl;				
 				string line;
 				getline(reader, line);
-				//cout << line << endl;
+
+				
+				cout << line << endl;
+				
 				/*
 				* TODO: Your code here
 				*       Read terms from reader.
 				*       For each term, build up a list of
 				*       documents in which the term occurs
+					初步的想法是实现一个工具类
+					实现从单行文本中，提取单词
+					再将单词存入postinglist中
 				*/
 			}
 
@@ -63,6 +83,9 @@ void Index::BSBI() {
 			//get next file
 			file = blockDir.nextFileInDir();
 		} //end while(file.exists())
+
+		system("pause");
+
 
 		/* Sort and output */
 		if (!blockFile.createNewFile()) {

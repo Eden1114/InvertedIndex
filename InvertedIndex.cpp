@@ -15,6 +15,11 @@ using namespace std;
 //Index  Basic|VB data_dir output_dir
 void BuildIndex(string indexType, string dataPath, string outPath)
 {
+	//输出中间信息以调试
+	//std::cout << indexType << std::endl;
+	//std::cout << dataPath << std::endl;
+	//std::cout << outPath << std::endl;
+
 	BaseIndex * pIndex;
 	File rootdir, outdir;
 
@@ -25,6 +30,7 @@ void BuildIndex(string indexType, string dataPath, string outPath)
 	else if (strcmp(indexType.c_str(), "VB") == 0) {
 		pIndex = new VBIndex();
 	}
+
 	else {
 		cerr << "Index method must be \"Basic \" or  \"VB \"" << endl;
 		return;
@@ -45,10 +51,12 @@ void BuildIndex(string indexType, string dataPath, string outPath)
 		delete pIndex;
 		return;
 	}
-
 	Index index(pIndex, rootdir, outdir);
+	
+	//输出中间信息以调试
+	//cout << "1.执行到这啦！" << endl;
+	
 	index.BSBI();
-
 	delete pIndex;
 }
 
@@ -85,7 +93,7 @@ void ExecuteQuery(string indexTpye, string indexPath)
 
 void main(int argc, char * argv[])
 {
-
+	std::cout << argc << std::endl;
 	/* Parse command line */
 	if (argc != 4 && argc != 5) {
 		cerr << "Usage 1:  Index  Basic|VB data_dir output_dir" << endl;
@@ -93,16 +101,15 @@ void main(int argc, char * argv[])
 		return;
 	}
 
-	if (strcmp(argv[1], "Index") == 0) {
+	if (strcmp(argv[1], "Index") == 0 && argc == 5) {
 		BuildIndex(argv[2], argv[3], argv[4]);
 	}
-	else if (strcmp(argv[1], "Query") == 0) {
+	else if (strcmp(argv[1], "Query") == 0 && argc == 4) {
 		ExecuteQuery(argv[2], argv[3]);
 	}
 	else {
 		cerr << "Comamand must be Index or Query!" << endl;
 	}
-
 }
 
 
