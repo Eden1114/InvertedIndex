@@ -55,9 +55,9 @@ void Index::BSBI() {
 				if (termDict[term] == 0) {
 					wordIdCounter++;
 					termDict[term] = wordIdCounter;
-					list<int> *posting = new list<int>();
-					posting->push_back(docIdCounter);
-					PostingList * pos = new PostingList(termDict[term], *posting);
+					list<int> posting;
+					posting.push_back(docIdCounter);
+					PostingList * pos = new PostingList(termDict[term], posting);
 					postinglists.push_back(pos);
 				}
 				else {
@@ -79,9 +79,9 @@ void Index::BSBI() {
 						}
 					}
 					if (!postinglist_flag) {
-						list<int> *posting = new list<int>();
-						posting->push_back(docIdCounter);
-						PostingList * pos = new PostingList(termDict[term], *posting);
+						list<int> posting;
+						posting.push_back(docIdCounter);
+						PostingList * pos = new PostingList(termDict[term], posting);
 						postinglists.push_back(pos);
 					}
 				}
@@ -91,7 +91,7 @@ void Index::BSBI() {
 		cout << postinglists.size() << endl;
 
 		//输出
-		cout << "BlockDir Name: " << blockDir.getPathName() << endl;
+		/*out << "BlockDir Name: " << blockDir.getPathName() << endl;
 		for (PostingList* postinglist : postinglists) {
 			cout << "termId:" << postinglist->getTermId() << endl;
 			list<int> *p = postinglist->getList();
@@ -100,7 +100,7 @@ void Index::BSBI() {
 				cout << docid << ' ';
 			}
 			cout << endl;
-		}
+		}*/
 
 		//输出到文件
 		ofstream writer(blockFile.getPathName());
@@ -110,20 +110,41 @@ void Index::BSBI() {
 			list<int> *p = postinglist->getList();
 			writer << "docIDs: ";
 			for (int docid : *p) {
-				cout << docid << ' ';
+				writer << docid << ' ';
 			}
 			writer << endl;
 		}
 		writer.close();
 
-
 		//释放内存
-
+		for (PostingList *postinglist : postinglists) {
+			delete postinglist;
+		}
 
 		block = rootdir.nextFileInDir();
+	}// end while(block.exists())
+
+	 /* Required: output total number of files. */
+	cout << totalFileCount << endl;
+	/* Merge Blocks */
+	while (true)
+	{
+		if (blockQueue.size() <= 1) {
+			break;
+		}
+		File b1 = blockQueue.front();
+		blockQueue.pop();
+		File b2 = blockQueue.front();
+		blockQueue.pop();
+		
+		string combfilename = b1.getName().substr(0, b1.getName().length() - 4) + "+" + b2.getName();
+		cout << combfilename << endl;
+		File combfile(outdir.getPathName(), combfilename);
+		if (!combfile.exists()) {
+			combfile.createNewFile();
+		}
+		
 	}
-
-
 
 }
 

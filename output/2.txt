@@ -1,0 +1,15 @@
+BlockDir Name: toy_example/data/2
+termId: 1
+docIDs: 5 
+termId: 2
+docIDs: 5 
+termId: 3
+docIDs: 5 
+termId: 4
+docIDs: 5 6 
+termId: 5
+docIDs: 6 
+termId: 6
+docIDs: 6 
+termId: 7
+docIDs: 6 

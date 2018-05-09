@@ -10,9 +10,9 @@ Terms::Terms(File file)
 		getline(reader, line);
 		size_t len = line.length() + 1;
 		char * delim = " ";
-		char * str = new char[len];
-		memset(str, 0, sizeof(char) * len);
-		strcpy(str, line.c_str());
+		char * str = new char[len]();
+		//memset(str, 0, sizeof(char) * len);
+		memcpy(str, line.c_str(),len);
 		for (size_t i = 0; i < len; i++) {
 			if (str[i] >= 'a' && str[i] <= 'z') continue;
 			else if (str[i] >= 'A' && str[i] <= 'Z') continue;

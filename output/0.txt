@@ -1,14 +1,15 @@
-termID: 1
+BlockDir Name: toy_example/data/0
+termId: 1
 docIDs: 1 
-termID: 2
+termId: 2
 docIDs: 1 
-termID: 3
+termId: 3
 docIDs: 1 
-termID: 4
+termId: 4
 docIDs: 1 2 
-termID: 5
+termId: 5
 docIDs: 2 
-termID: 6
+termId: 6
 docIDs: 2 
-termID: 7
+termId: 7
 docIDs: 2 
