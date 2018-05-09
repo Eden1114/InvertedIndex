@@ -14,6 +14,7 @@
     <ProjectGuid>{17225C5A-CF20-425C-B41C-ACA80FD3FE8D}</ProjectGuid>
     <RootNamespace>InvertedIndex</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -98,6 +99,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Terms.cpp" />
     <ClCompile Include="util\File.cpp" />
     <ClCompile Include="VBIndex.cpp" />
   </ItemGroup>
@@ -110,6 +112,7 @@
     <ClInclude Include="Query.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Terms.h" />
     <ClInclude Include="util\File.h" />
     <ClInclude Include="VBIndex.h" />
   </ItemGroup>

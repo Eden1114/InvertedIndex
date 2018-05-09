@@ -29,17 +29,16 @@ private:
 	int docIdCounter;
 	// Term counter
 	int wordIdCounter;
-	
+
 	// Index
 	BaseIndex * pIndex;
 	File rootdir, outdir;
 
 private:
 	void writePosting(ofstream &out, PostingList  * posting);
-	
-public:
-	Index(BaseIndex * index, File& root, File& out) ;
-	~Index(void);
 
-	void BSBI() ;
+public:
+	Index(BaseIndex * index, File& root, File& out);
+	~Index(void);
+	void BSBI();
 };

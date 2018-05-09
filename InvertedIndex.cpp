@@ -13,16 +13,10 @@ using namespace std;
 
 //建立索引
 //Index  Basic|VB data_dir output_dir
-void BuildIndex(string indexType, string dataPath, string outPath)
-{
-	//输出中间信息以调试
-	//std::cout << indexType << std::endl;
-	//std::cout << dataPath << std::endl;
-	//std::cout << outPath << std::endl;
-
+void BuildIndex(string indexType, string dataPath, string outPath) {
 	BaseIndex * pIndex;
 	File rootdir, outdir;
-
+	
 	/* Get index */
 	if (strcmp(indexType.c_str(), "Basic") == 0) {
 		pIndex = new BasicIndex();
@@ -30,9 +24,10 @@ void BuildIndex(string indexType, string dataPath, string outPath)
 	else if (strcmp(indexType.c_str(), "VB") == 0) {
 		pIndex = new VBIndex();
 	}
-
+	
 	else {
 		cerr << "Index method must be \"Basic \" or  \"VB \"" << endl;
+		system("pause");
 		return;
 	}
 
@@ -41,6 +36,7 @@ void BuildIndex(string indexType, string dataPath, string outPath)
 	if (!rootdir.exists()) {
 		cerr << "Invalid data directory: " << dataPath << endl;
 		delete pIndex;
+		system("pause");
 		return;
 	}
 
@@ -49,20 +45,17 @@ void BuildIndex(string indexType, string dataPath, string outPath)
 	if ((!outdir.exists()) && (!outdir.mkdir())) {
 		cerr << "Invalid output directory:" << outPath << endl;
 		delete pIndex;
+		system("pause");
 		return;
 	}
 	Index index(pIndex, rootdir, outdir);
-	
-	//输出中间信息以调试
-	//cout << "1.执行到这啦！" << endl;
 	
 	index.BSBI();
 	delete pIndex;
 }
 
 // Query Basic|VB index_dir
-void ExecuteQuery(string indexTpye, string indexPath)
-{
+void ExecuteQuery(string indexTpye, string indexPath) {
 	BaseIndex * pIndex;
 
 	/* Get index */
@@ -82,6 +75,7 @@ void ExecuteQuery(string indexTpye, string indexPath)
 	if (!inputdir.exists() || !inputdir.isDirectory()) {
 		cerr << "Invalid index directory: " << indexPath << endl;
 		delete pIndex;
+		system("pause");
 		return;
 	}
 
@@ -91,14 +85,24 @@ void ExecuteQuery(string indexTpye, string indexPath)
 	delete pIndex;
 }
 
-void main(int argc, char * argv[])
+int main(int argc, char * argv[])
 {
-	std::cout << argc << std::endl;
+	/////////////////内存泄漏检测
+	#ifdef WIN32
+	#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__) //添加这一句
+		int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+		tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
+	_CrtSetDbgFlag(tmpFlag);
+	#endif
+	/////////////////
+
+
 	/* Parse command line */
 	if (argc != 4 && argc != 5) {
 		cerr << "Usage 1:  Index  Basic|VB data_dir output_dir" << endl;
 		cerr << "Usage 2:  Query Basic|VB index_dir" << endl;
-		return;
+		system("pause");
+		return 0;
 	}
 
 	if (strcmp(argv[1], "Index") == 0 && argc == 5) {
@@ -109,7 +113,9 @@ void main(int argc, char * argv[])
 	}
 	else {
 		cerr << "Comamand must be Index or Query!" << endl;
+		system("pause");
 	}
+	system("pause");
 }
 
 

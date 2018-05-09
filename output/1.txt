@@ -1,0 +1,10 @@
+termID: 8
+docIDs: 3 
+termID: 9
+docIDs: 3 
+termID: 10
+docIDs: 3 
+termID: 11
+docIDs: 3 4 
+termID: 12
+docIDs: 3 

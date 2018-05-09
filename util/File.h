@@ -3,10 +3,6 @@
 #include <string>
 #include <list>
 using namespace std;
-/* File calss
- *
- *
- */
 class File
 {
 public:
@@ -29,12 +25,12 @@ private:
 public:
 	File(string path = "");
 	File(string parent, string child);
-	File(File & parent, string child);
-	File(const File  & another);
+	File(File &parent, string child);
+	File(const File& another);
 	~File(void);
 
 	File& operator= (const File & rh);
-	void setToFile(string pathName);
+	void setToFile( string pathName);
 	
 	File firstFileInDir();
 	File nextFileInDir();
