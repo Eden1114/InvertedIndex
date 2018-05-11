@@ -1,9 +1,9 @@
 #pragma once
 #include "baseIndex.h"
-#include <iostream>
 
-class BasicIndex : public BaseIndex
-{
+using namespace std;
+
+class BasicIndex : public BaseIndex {
 public:
 	BasicIndex(void);
 	~BasicIndex(void);

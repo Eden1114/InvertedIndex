@@ -1,6 +1,8 @@
 #pragma once
 #include "postingList.h"
 
+using namespace std;
+
 /*
 	这是一个给BasicIndex和VBIndex继承的类
 	抽象了 PostingList 的读写函数

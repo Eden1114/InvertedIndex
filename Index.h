@@ -1,17 +1,11 @@
 #pragma once
-
-#include <map>
-#include <string>
-#include <list>
-#include <queue>
-#include <fstream>
+#include "stdafx.h"
 #include "BaseIndex.h"
 #include "util/File.h"
 
 using namespace std;
 
-class Index
-{
+class Index {
 private:
 	// Term id -> (position in index file, doc frequency) dictionary
 	map<int, pair<long, int>> postingDict;

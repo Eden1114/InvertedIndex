@@ -1,5 +1,8 @@
 #pragma once
 #include "baseIndex.h"
+
+using namespace std;
+
 class VBIndex : public BaseIndex
 {
 public:

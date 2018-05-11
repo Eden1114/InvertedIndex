@@ -2,9 +2,10 @@
 #include <windows.h>
 #include <string>
 #include <list>
+
 using namespace std;
-class File
-{
+
+class File {
 public:
 	enum FileType 
 	{

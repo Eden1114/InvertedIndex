@@ -9,7 +9,6 @@ using namespace std;
  * postings is a list of docIDs 
  *
  */
-
 class PostingList {
 private:
 	int termId;

@@ -1,8 +1,5 @@
 #pragma once
-#include <map>
-#include <string>
-#include <list>
-#include <fstream>
+#include "stdafx.h"
 #include "baseIndex.h"
 #include "postingList.h"
 #include "util/file.h"

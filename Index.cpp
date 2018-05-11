@@ -1,9 +1,10 @@
-#include "StdAfx.h"
-#include "Index.h"
-#include <iostream>
-#include "postingList.h"
+#include "stdafx.h"
+
 #include "indexCompression.h"
+#include "postingList.h"
+#include "Index.h"
 #include "Terms.h"
+
 
 Index::Index(BaseIndex * index, File& root, File& out) : pIndex(index), rootdir(root), outdir(out)
 {
@@ -43,11 +44,10 @@ void Index::BSBI() {
 		File file = blockDir.firstFileInDir();
 
 		cout << blockDir.getPathName() << endl;
-		cout << postinglists.size() << endl;
 
 		while (file.exists()) {
 			totalFileCount++;
-			docDict[file.getPathName()] = docIdCounter++; //getPathName!
+			docDict[file.getPathName()] = ++docIdCounter; //getPathName!
 
 			Terms terms(file);
 
@@ -88,7 +88,7 @@ void Index::BSBI() {
 			}
 			file = blockDir.nextFileInDir();
 		}
-		cout << postinglists.size() << endl;
+		
 
 		//输出
 		/*out << "BlockDir Name: " << blockDir.getPathName() << endl;
@@ -104,13 +104,23 @@ void Index::BSBI() {
 
 		//输出到文件
 		ofstream writer(blockFile.getPathName());
-		writer << "BlockDir Name: " << blockDir.getPathName() << endl;
+		//writer << "BlockDir Name: " << blockDir.getPathName() << endl;
+		writer << postinglists.size() << endl;
 		for (PostingList* postinglist : postinglists) {
-			writer << "termId: " << postinglist->getTermId() << endl;
+			//termid
+			writer << postinglist->getTermId()<<' ';
+			//num of docids
 			list<int> *p = postinglist->getList();
-			writer << "docIDs: ";
+			writer << p->size() << endl;
+			bool first = true;
 			for (int docid : *p) {
-				writer << docid << ' ';
+				if (first) {
+					writer << docid;
+					first = false;
+				}
+				else {
+					writer << ' ' << docid;
+				}
 			}
 			writer << endl;
 		}
@@ -125,8 +135,11 @@ void Index::BSBI() {
 	}// end while(block.exists())
 
 	 /* Required: output total number of files. */
+	cout << "文件总数为：" << endl;
 	cout << totalFileCount << endl;
+
 	/* Merge Blocks */
+	
 	while (true)
 	{
 		if (blockQueue.size() <= 1) {
@@ -141,11 +154,174 @@ void Index::BSBI() {
 		cout << combfilename << endl;
 		File combfile(outdir.getPathName(), combfilename);
 		if (!combfile.exists()) {
-			combfile.createNewFile();
+			if (!combfile.createNewFile()) {
+				cerr << "conbine file created failed!" << endl;
+				return;
+			}
+		}
+
+		ifstream bf1(b1.getPathName());
+		ifstream bf2(b2.getPathName());
+		ofstream mf(combfile.getPathName());
+		
+		/////////////////////////
+		//TODO:
+		list<PostingList *> postinglists;
+		set<int> vis_termId;
+
+		int size;
+		bf1 >> size;
+		
+		for (int i = 0; i < size; i++)
+		{
+			int termid, n;
+			bf1 >> termid >> n;
+			if(vis_termId.count(termid)) {
+				for (PostingList * postinglist : postinglists) {
+					if (postinglist->getTermId() == termid) {
+						list<int> *list = postinglist->getList();
+						int docid;
+						for (int i = 0; i < n; i++) {
+							bf1 >> docid;
+							list->push_back(docid);
+						}
+					}
+					/*else {
+						cout << "Error!" << endl;
+					}*/
+				}
+			}
+			else {
+				vis_termId.insert(termid);
+				list<int> docids;
+				int docid;
+				for (int i = 0; i < n; i++) {
+					bf1 >> docid;
+					docids.push_back(docid);
+				}
+				PostingList * postinglist = new PostingList(termid, docids);
+				postinglists.push_back(postinglist);
+			}
+			
+		}
+
+		bf2 >> size;
+
+		for (int i = 0; i < size; i++)
+		{
+			int termid, n;
+			bf2 >> termid >> n;
+			if (vis_termId.count(termid)) {
+				for (PostingList * postinglist : postinglists) {
+					if (postinglist->getTermId() == termid) {
+						list<int> *list = postinglist->getList();
+						int docid;
+						for (int i = 0; i < n; i++) {
+							bf2 >> docid;
+							list->push_back(docid);
+						}
+					}
+					/*else {
+						cout << "Error!" << endl;
+					}*/
+				}
+			}
+			else {
+				vis_termId.insert(termid);
+				list<int> docids;
+				int docid;
+				for (int i = 0; i < n; i++) {
+					bf2 >> docid;
+					docids.push_back(docid);
+				}
+				PostingList * postinglist = new PostingList(termid, docids);
+				postinglists.push_back(postinglist);
+			}
+
+		}
+
+
+		//输出到文件
+		mf << postinglists.size() << endl;
+		for (PostingList* postinglist : postinglists) {
+			//termid
+			mf << postinglist->getTermId() << ' ';
+			//num of docids
+			list<int> *p = postinglist->getList();
+			mf << p->size() << endl;
+			bool first = true;
+			for (int docid : *p) {
+				if (first) {
+					mf << docid;
+					first = false;
+				}
+				else {
+					mf << ' ' << docid;
+				}
+			}
+			mf << endl;
 		}
 		
+
+		//释放内存
+		for (PostingList *postinglist : postinglists) {
+			delete postinglist;
+		}
+		//
+		bf1.close();
+		bf2.close();
+		mf.close();
+		b1.deleteFile();
+		b2.deleteFile();
+		blockQueue.push(combfile);
 	}
 
+
+	
+	///* Dump constructed index back into file system */
+	
+	
+	File indexFile = blockQueue.front();
+	blockQueue.pop();
+	
+	if (File(outdir.getPathName() + "/corpus.index").exists()) {
+		File(outdir.getPathName() + "/corpus.index").deleteFile();
+	}
+	bool renameflag = indexFile.renameTo(outdir.getPathName() + "/corpus.index");
+	//cout << "Renameflag:" << renameflag << endl;
+
+
+	ofstream termWriter((outdir.getPathName()+ "/term.dict").c_str());
+	 //TODO: write  term dictionary to disc.
+	map<string, int>::iterator it = termDict.begin();
+	for (;it != termDict.end(); ++it) {
+		termWriter << it->second << " " << it->first << endl;
+	}
+
+	termWriter.close();
+
+
+	ofstream docWriter((outdir.getPathName() +  "/doc.dict").c_str());
+	//TODO: write  document dictionary to disc.
+	it = docDict.begin();
+	for (; it != docDict.end(); ++it) {
+		docWriter << it->second << " " << it->first << endl;
+	}
+	docWriter.close();
+
+	
+
+	
+	/*
+	ofstream postWriter((outdir.getPathName() + "/posting.dict").c_str());
+	map<string, int>::iterator it = postingDict.begin();
+	for (; it != docDict.end(); ++it) {
+		docWriter << it->second << " " << it->first << endl;
+	}
+	postWriter.close();
+	*/
+	
+	
 }
 
 
