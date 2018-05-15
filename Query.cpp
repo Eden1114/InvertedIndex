@@ -35,6 +35,7 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 	list<int> * p = new list<int>();
 	/*
 	 * TODO: Your code here
+	 *
 	 */
 
 
