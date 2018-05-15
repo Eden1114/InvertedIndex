@@ -11,6 +11,8 @@
 #include <tchar.h>
 #include <direct.h>
 #include <assert.h>
+#include <windows.h>
+
 
 
 #include <string>
@@ -22,7 +24,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
 
 
 

@@ -3,11 +3,14 @@
 using namespace std;
 
 /* 
- * 倒排记录表 Posting List
- * termId 词项id int
- * postings 倒排记录表 list<int> 
- * postings is a list of docIDs 
+ * Postinglist
+ * termid : int
+ * postings :list<int>
+ * postings is a list of docIDs
+ * Frequency is the size of postings
  *
+ * Postinglist 倒排记录表 
+ * termId 词项索引 
  */
 class PostingList {
 private:

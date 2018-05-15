@@ -1,7 +1,6 @@
 #pragma once
 
-class IndexCompression
-{
+class IndexCompression {
 public:
 	IndexCompression(void);
 	~IndexCompression(void);

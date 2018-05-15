@@ -6,11 +6,10 @@
 
 using namespace std;
 
-class Query
-{
+class Query {
 private:
 	// Term id -> position in index file
-	 map<int, long> posDict;
+	map<int, long> posDict;
 
 	// Term id -> document frequency
 	map<int, int> freqDict;
@@ -36,3 +35,4 @@ public:
 	void execute();
 
 };
+

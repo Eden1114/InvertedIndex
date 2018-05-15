@@ -5,7 +5,6 @@
 #include "Index.h"
 #include "Terms.h"
 
-
 Index::Index(BaseIndex * index, File& root, File& out) : pIndex(index), rootdir(root), outdir(out)
 {
 	totalFileCount = 0;
@@ -18,21 +17,28 @@ Index::~Index(void)
 
 }
 
-void Index::writePosting(ofstream &out, PostingList* posting) {
-
-
-}
-
 /*
    BSBI indexing algorithm
    block中建立postinglist.
    然后合并.
+
+
+   这里还需要重构，实现读写与文件无关！
+   TODO: 
+		1.去掉后缀名！
+		2.读写postinglist通过
+		pindex->readposting();
+		pindex->writeposting();实现
+		
+		反正存的都是数字
+		这里要用到C++与二进制流的问题
  */
 void Index::BSBI() {
 	File block = rootdir.firstFileInDir();
 	while (block.exists()) {
 		list<PostingList*> postinglists;
-		File blockFile(outdir, block.getName() + ".txt");
+		cout << block.getName() << endl;
+		File blockFile(outdir, block.getName());
 		if (!blockFile.exists()) {
 			if (!blockFile.createNewFile()) {
 				cerr << "Create new block file failed" << endl;
@@ -43,14 +49,13 @@ void Index::BSBI() {
 		File blockDir(rootdir, block.getName());
 		File file = blockDir.firstFileInDir();
 
+		//输出以调试
 		cout << blockDir.getPathName() << endl;
 
 		while (file.exists()) {
 			totalFileCount++;
-			docDict[file.getPathName()] = ++docIdCounter; //getPathName!
-
+			docDict[file.getPathName()] = ++docIdCounter;
 			Terms terms(file);
-
 			for (string term : terms.getTerms()) {
 				if (termDict[term] == 0) {
 					wordIdCounter++;
@@ -89,7 +94,6 @@ void Index::BSBI() {
 			file = blockDir.nextFileInDir();
 		}
 		
-
 		//输出
 		/*out << "BlockDir Name: " << blockDir.getPathName() << endl;
 		for (PostingList* postinglist : postinglists) {
@@ -104,27 +108,9 @@ void Index::BSBI() {
 
 		//输出到文件
 		ofstream writer(blockFile.getPathName());
-		//writer << "BlockDir Name: " << blockDir.getPathName() << endl;
-		writer << postinglists.size() << endl;
-		for (PostingList* postinglist : postinglists) {
-			//termid
-			writer << postinglist->getTermId()<<' ';
-			//num of docids
-			list<int> *p = postinglist->getList();
-			writer << p->size() << endl;
-			bool first = true;
-			for (int docid : *p) {
-				if (first) {
-					writer << docid;
-					first = false;
-				}
-				else {
-					writer << ' ' << docid;
-				}
-			}
-			writer << endl;
-		}
+		pIndex->writePostings(writer, postinglists);
 		writer.close();
+		//这里体现了basicIndex和VBindex的区别
 
 		//释放内存
 		for (PostingList *postinglist : postinglists) {
@@ -135,13 +121,12 @@ void Index::BSBI() {
 	}// end while(block.exists())
 
 	 /* Required: output total number of files. */
-	cout << "文件总数为：" << endl;
+	cout << "文件总数为：";
 	cout << totalFileCount << endl;
 
 	/* Merge Blocks */
 	
-	while (true)
-	{
+	while (true) {
 		if (blockQueue.size() <= 1) {
 			break;
 		}
@@ -150,9 +135,12 @@ void Index::BSBI() {
 		File b2 = blockQueue.front();
 		blockQueue.pop();
 		
-		string combfilename = b1.getName().substr(0, b1.getName().length() - 4) + "+" + b2.getName();
+		string combfilename = b1.getName() + "+" + b2.getName();
 		cout << combfilename << endl;
 		File combfile(outdir.getPathName(), combfilename);
+
+		cout << combfile.getPathName() << endl;
+
 		if (!combfile.exists()) {
 			if (!combfile.createNewFile()) {
 				cerr << "conbine file created failed!" << endl;
@@ -160,114 +148,33 @@ void Index::BSBI() {
 			}
 		}
 
+		cout << b1.getPathName() << endl;
+		cout << b2.getPathName() << endl;
+		cout << combfile.getPathName() << endl;
+
 		ifstream bf1(b1.getPathName());
 		ifstream bf2(b2.getPathName());
 		ofstream mf(combfile.getPathName());
 		
+		//postinglist * read = pIndex.readPosting(bf1, list<PostingList*> &postinglists);
+
+
 		/////////////////////////
 		//TODO:
 		list<PostingList *> postinglists;
 		set<int> vis_termId;
 
-		int size;
-		bf1 >> size;
-		
-		for (int i = 0; i < size; i++)
-		{
-			int termid, n;
-			bf1 >> termid >> n;
-			if(vis_termId.count(termid)) {
-				for (PostingList * postinglist : postinglists) {
-					if (postinglist->getTermId() == termid) {
-						list<int> *list = postinglist->getList();
-						int docid;
-						for (int i = 0; i < n; i++) {
-							bf1 >> docid;
-							list->push_back(docid);
-						}
-					}
-					/*else {
-						cout << "Error!" << endl;
-					}*/
-				}
-			}
-			else {
-				vis_termId.insert(termid);
-				list<int> docids;
-				int docid;
-				for (int i = 0; i < n; i++) {
-					bf1 >> docid;
-					docids.push_back(docid);
-				}
-				PostingList * postinglist = new PostingList(termid, docids);
-				postinglists.push_back(postinglist);
-			}
-			
-		}
-
-		bf2 >> size;
-
-		for (int i = 0; i < size; i++)
-		{
-			int termid, n;
-			bf2 >> termid >> n;
-			if (vis_termId.count(termid)) {
-				for (PostingList * postinglist : postinglists) {
-					if (postinglist->getTermId() == termid) {
-						list<int> *list = postinglist->getList();
-						int docid;
-						for (int i = 0; i < n; i++) {
-							bf2 >> docid;
-							list->push_back(docid);
-						}
-					}
-					/*else {
-						cout << "Error!" << endl;
-					}*/
-				}
-			}
-			else {
-				vis_termId.insert(termid);
-				list<int> docids;
-				int docid;
-				for (int i = 0; i < n; i++) {
-					bf2 >> docid;
-					docids.push_back(docid);
-				}
-				PostingList * postinglist = new PostingList(termid, docids);
-				postinglists.push_back(postinglist);
-			}
-
-		}
-
+		pIndex->readPostings(bf1, postinglists, vis_termId);
+		pIndex->readPostings(bf2, postinglists, vis_termId);
 
 		//输出到文件
-		mf << postinglists.size() << endl;
-		for (PostingList* postinglist : postinglists) {
-			//termid
-			mf << postinglist->getTermId() << ' ';
-			//num of docids
-			list<int> *p = postinglist->getList();
-			mf << p->size() << endl;
-			bool first = true;
-			for (int docid : *p) {
-				if (first) {
-					mf << docid;
-					first = false;
-				}
-				else {
-					mf << ' ' << docid;
-				}
-			}
-			mf << endl;
-		}
-		
+		pIndex->writePostings(mf, postinglists);
 
 		//释放内存
 		for (PostingList *postinglist : postinglists) {
 			delete postinglist;
 		}
-		//
+		
 		bf1.close();
 		bf2.close();
 		mf.close();
@@ -275,21 +182,16 @@ void Index::BSBI() {
 		b2.deleteFile();
 		blockQueue.push(combfile);
 	}
-
-
-	
-	///* Dump constructed index back into file system */
-	
 	
 	File indexFile = blockQueue.front();
 	blockQueue.pop();
-	
-	if (File(outdir.getPathName() + "/corpus.index").exists()) {
-		File(outdir.getPathName() + "/corpus.index").deleteFile();
+	cout << indexFile.getPathName() << endl;
+	File indexDeleteFile(outdir.getPathName() + "/corpus.index");
+	if (indexDeleteFile.exists()) {
+		indexDeleteFile.deleteFile();
 	}
 	bool renameflag = indexFile.renameTo(outdir.getPathName() + "/corpus.index");
-	//cout << "Renameflag:" << renameflag << endl;
-
+	cout << "Renameflag:" << renameflag << endl;
 
 	ofstream termWriter((outdir.getPathName()+ "/term.dict").c_str());
 	 //TODO: write  term dictionary to disc.
@@ -300,7 +202,6 @@ void Index::BSBI() {
 
 	termWriter.close();
 
-
 	ofstream docWriter((outdir.getPathName() +  "/doc.dict").c_str());
 	//TODO: write  document dictionary to disc.
 	it = docDict.begin();
@@ -308,20 +209,5 @@ void Index::BSBI() {
 		docWriter << it->second << " " << it->first << endl;
 	}
 	docWriter.close();
-
-	
-
-	
-	/*
-	ofstream postWriter((outdir.getPathName() + "/posting.dict").c_str());
-	map<string, int>::iterator it = postingDict.begin();
-	for (; it != docDict.end(); ++it) {
-		docWriter << it->second << " " << it->first << endl;
-	}
-	postWriter.close();
-	*/
-	
 	
 }
-
-

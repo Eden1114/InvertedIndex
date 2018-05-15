@@ -4,29 +4,27 @@
 
 Query::Query(BaseIndex * index, File& input) : pIndex(index), inputDir(input)
 {
+
 }
 
 Query::~Query(void)
 {
+
 }
 
 
-/* 
- * Write a posting list with a given termID from the file 
- * You should seek to the file position of this specific
- * posting list and read it back.
- * */
-PostingList * Query::readPosting(ifstream& in, int termId)
-{
-	PostingList * posting = NULL;
-	
-	// TODO: Your code here
-	// Write a posting list with a given termID from the file
-	// You should seek to the file position of this specific
-	// posting list and read it back.
-
-	return posting;
-}
+///* 
+// * Write a posting list with a given termID from the file 
+// * You should seek to the file position of this specific
+// * posting list and read it back.
+// */
+//PostingList * Query::readPosting(ifstream& in, int termId)
+//{
+//	PostingList * posting = NULL;
+//	
+//	//posting = pIndex->readPosting(in, termId);
+//	return posting;
+//}
 
 
 /*
@@ -38,9 +36,34 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 	/*
 	 * TODO: Your code here
 	 */
-
-
-
+	list<int>::iterator it1 = p1.begin();
+	list<int>::iterator it2 = p2.begin();
+	
+	while (it1 != p1.end() || it2 != p2.end()) {
+		if (it1 != p1.end() && it2 != p2.end()) {
+			if (*it1 == *it2) {
+				p->push_back(*it1);
+				it1++;
+				it2++;
+			}
+			else if(*it1 > *it2){
+				p->push_back(*it2);
+				it2++;
+			}
+			else {
+				p->push_back(*it1);
+				it1++;
+			}
+		} 
+		else if (it1 == p1.end() && it2 != p2.end()) {
+			p->push_back(*it2);
+			it2++;
+		}
+		else {
+			p->push_back(*it1);
+			it1++;
+		}
+	}
 	return p;
 }
 
@@ -48,13 +71,15 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 void Query::execute() 
 {
 	/* Index file */
-	ifstream indexFile((inputDir.getPathName() + "/corpus.index").c_str());
+	ifstream indexFile(inputDir.getPathName() + "/corpus.index");
 
 	/* Term dictionary */
-	ifstream termReader((inputDir.getPathName() + "/term.dict").c_str());
+	ifstream termReader((inputDir.getPathName() + "/term.dict")									.c_str());
+	
 	/*
 	  * TODO: Build term dictionary
 	  */
+
 	termReader.close();
 
 	/* Doc dictionary */
