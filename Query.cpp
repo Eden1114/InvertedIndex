@@ -41,7 +41,7 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 
 	list<int>::iterator it1 = p1.begin();
 	list<int>::iterator it2 = p2.begin();
-	
+
 	while (it1 != p1.end() || it2 != p2.end()) {
 		if (it1 != p1.end() && it2 != p2.end()) {
 			if (*it1 == *it2) {
@@ -49,7 +49,7 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 				it1++;
 				it2++;
 			}
-			else if(*it1 > *it2){
+			else if (*it1 > *it2) {
 				p->push_back(*it2);
 				it2++;
 			}
@@ -57,7 +57,7 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 				p->push_back(*it1);
 				it1++;
 			}
-		} 
+		}
 		else if (it1 == p1.end() && it2 != p2.end()) {
 			p->push_back(*it2);
 			it2++;
@@ -71,35 +71,47 @@ list<int> * Query::intersect(list<int>& p1, list<int>& p2)
 }
 
 
-void Query::execute() 
+void Query::execute()
 {
 	/* Index file */
 	ifstream indexFile(inputDir.getPathName() + "/corpus.index");
 
 	/* Term dictionary */
-	ifstream termReader((inputDir.getPathName() + "/term.dict")									.c_str());
-	
+	ifstream termReader((inputDir.getPathName() + "/term.dict").c_str());
+	{
+		int termid;
+		string term;
+		while (termReader >> termid) {
+			termReader >> term;
+			termDict[term] = termid;
+		}
+		termReader.close();
+	}
+
+	{
+		/* Doc dictionary */
+		ifstream docReader((inputDir.getPathName() + "/doc.dict").c_str());
+		int docid;
+		string doc;
+		while (docReader >> docid)
+		{
+			docReader >> doc;
+			docDict[docid] = doc;
+		}
+		docReader.close();
+	}
+
 	/*
-	  * TODO: Build term dictionary
-	  */
-
-	termReader.close();
-
-	/* Doc dictionary */
-	ifstream docReader((inputDir.getPathName() + "/doc.dict").c_str());
-	/*
-	  * TODO: Build doc dictionary
-	  */
-	docReader.close();
-
-	/* Posting dictionary */
-	ifstream postReader((inputDir.getPathName() + "/posting.dict").c_str());
-	/*
-	  * TODO: Build doc dictionary
-	  */
-	postReader.close();
-
+	{
+		//Posting dictionary 
+		ifstream postReader((inputDir.getPathName() + "/posting.dict").c_str());
+		
+		  * TODO: Build doc dictionary
+		postReader.close();
+	}
+	*/
 	/* Processing queries */
+
 	string line;
 	getline(cin, line);
 	while (line != "") {
@@ -113,7 +125,7 @@ void Query::execute()
 
 		getline(cin, line);
 	}
-		
+
 	indexFile.close();
 }
 

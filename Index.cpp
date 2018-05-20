@@ -22,16 +22,6 @@ Index::~Index(void)
    block中建立postinglist.
    然后合并.
 
-
-   这里还需要重构，实现读写与文件无关！
-   TODO: 
-		1.去掉后缀名！
-		2.读写postinglist通过
-		pindex->readposting();
-		pindex->writeposting();实现
-		
-		反正存的都是数字
-		这里要用到C++与二进制流的问题
  */
 void Index::BSBI() {
 	File block = rootdir.firstFileInDir();

@@ -7,7 +7,6 @@ using namespace std;
 
 /*
 	用于构建倒排索引的类
-
 */
 class Index {
 private:
