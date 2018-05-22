@@ -12,23 +12,30 @@ BasicIndex::~BasicIndex(void)
 
 }
 
-
-PostingList* BasicIndex::readPosting(ifstream& in) {
-	PostingList * posting = NULL;
-	int termid, size, docid;
-	in >> termid >> size;
+//从指定位置读取Posting
+PostingList* BasicIndex::readPosting(ifstream& in, streampos streampos) {
+	//TODO:从指定偏移量开始读取文件
+	PostingList* posting = NULL;
+	in.seekg(streampos);
+	int termid;
 	list<int> docids;
+	in >> termid;
 
+	int size;
+	in >> size;
+	
 	for (int i = 0; i < size; i++)
 	{
-		cin >> docid;
+		int docid;
+		in >> docid;
 		docids.push_back(docid);
 	}
-
 	posting = new PostingList(termid, docids);
+
 	return posting;
 }
 
+//读取整个postinglist
 void BasicIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, set<int>& vis_termid)
 {
 	int size;
@@ -65,6 +72,7 @@ void BasicIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, s
 	}
 }
 
+//写一个postinglist
 void BasicIndex::writePosting(ofstream& out, PostingList * posting) {
 	out << posting->getTermId() << ' ';
 	out << posting->getList()->size() << endl;
@@ -81,10 +89,16 @@ void BasicIndex::writePosting(ofstream& out, PostingList * posting) {
 	out << endl;
 }
 
-void BasicIndex::writePostings(ofstream & out, list<PostingList*>& postinglists)
+//写入所有的postinglist,并构建posDict
+void BasicIndex::writePostings(ofstream & out, list<PostingList*>& postinglists, map<int, streampos>& postingDict)
 {
 	out << postinglists.size() << endl;
 	for (PostingList * postinglist : postinglists) {
+
+		//记录位置，便于readPosting
+		streampos streampos = out.tellp();
+		postingDict[postinglist->getTermId()] = streampos;
+
 		writePosting(out, postinglist);
 	}
 }

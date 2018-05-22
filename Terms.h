@@ -10,6 +10,7 @@ private:
 
 public:
 	Terms(File file);
+	Terms(string line);
 	vector<string>& getTerms();
 	~Terms();
 };

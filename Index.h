@@ -10,9 +10,8 @@ using namespace std;
 */
 class Index {
 private:
-	// Term id -> (position in index file, doc frequency) dictionary
-	//map<int, pair<long, int>> postingDict;
-	//以上数据结构不用维护，因为在corpus.index文件中，可以直接在O(1)的复杂度下找到。
+	//Term id -> (position in index file, doc frequency) dictionary
+	map<int, streampos> postingDict;
 
 	// Doc name -> doc id dictionary
 	map<string, int> docDict;

@@ -98,7 +98,7 @@ void Index::BSBI() {
 
 		//输出到文件
 		ofstream writer(blockFile.getPathName());
-		pIndex->writePostings(writer, postinglists);
+		pIndex->writePostings(writer, postinglists, postingDict);
 		writer.close();
 		//这里体现了basicIndex和VBindex的区别
 
@@ -146,8 +146,7 @@ void Index::BSBI() {
 		ifstream bf2(b2.getPathName());
 		ofstream mf(combfile.getPathName());
 		
-		//postinglist * read = pIndex.readPosting(bf1, list<PostingList*> &postinglists);
-
+		
 
 		/////////////////////////
 		//TODO:
@@ -158,7 +157,7 @@ void Index::BSBI() {
 		pIndex->readPostings(bf2, postinglists, vis_termId);
 
 		//输出到文件
-		pIndex->writePostings(mf, postinglists);
+		pIndex->writePostings(mf, postinglists, postingDict);
 
 		//释放内存
 		for (PostingList *postinglist : postinglists) {
@@ -192,12 +191,24 @@ void Index::BSBI() {
 
 	termWriter.close();
 
-	ofstream docWriter((outdir.getPathName() +  "/doc.dict").c_str());
+
 	//TODO: write  document dictionary to disc.
+	ofstream docWriter((outdir.getPathName() +  "/doc.dict").c_str());
 	it = docDict.begin();
 	for (; it != docDict.end(); ++it) {
 		docWriter << it->second << " " << it->first << endl;
 	}
 	docWriter.close();
-	
+
+
+	//TDO: write streampos dictionary to disc.
+	ofstream posWriter((outdir.getPathName() + "/pos.dict").c_str());
+
+	map<int, streampos>::iterator iter = postingDict.begin();
+	for (; iter != postingDict.end(); ++iter) {
+
+		posWriter << iter->first << " " << iter->second << endl;
+	}
+
+	posWriter.close();
 }

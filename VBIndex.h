@@ -13,11 +13,11 @@ public:
 	VBIndex(void);
 	~VBIndex(void);
 
-	PostingList * readPosting(ifstream& in);
+	PostingList* readPosting(ifstream& in, streampos streampos);
 	void readPostings(ifstream& in, list<PostingList *>& postinglists, set<int>& vis_termid);
 
-	void writePosting(ofstream& out, PostingList *p);
-	void writePostings(ofstream &out, list<PostingList*> &postinglists);
+	void writePosting(ofstream& out, PostingList *posting);
+	void writePostings(ofstream &out, list<PostingList*> &postinglists, map<int, streampos>& postingDict);
 };
 
 

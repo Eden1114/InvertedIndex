@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "Query.h"
+#include "Terms.h"
 #include <iostream>
 
 Query::Query(BaseIndex * index, File& input) : pIndex(index), inputDir(input)
@@ -115,6 +116,9 @@ void Query::execute()
 	string line;
 	getline(cin, line);
 	while (line != "") {
+		Terms terms(line);
+
+
 		/*
 		 * TODO: Your code here
 		 *       Perform query processing with the inverted index.
