@@ -9,10 +9,10 @@ using namespace std;
 class Query {
 private:
 	// Term id -> position in index file
-	//map<int, long> posDict;
+	map<int, long> posDict;
 
 	// Term id -> document frequency
-	map<int, int> freqDict;
+	// map<int, int> freqDict;
 	
 	// Doc id -> doc name dictionary
 	map<int, string> docDict;
@@ -25,7 +25,6 @@ private:
 	File inputDir;
 
 private:
-	//PostingList* readPosting(ifstream& in, int termId);
 	list<int> * intersect(list<int>& p1, list<int>& p2);
 
 public:

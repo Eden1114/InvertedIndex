@@ -10,6 +10,7 @@ using namespace std;
 */
 class BaseIndex {
 public:
+	int type;
 	BaseIndex(void);
 	~BaseIndex(void);
 

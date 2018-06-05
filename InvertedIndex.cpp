@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
 {
 	/////////////////内存泄漏检测
 	#ifdef WIN32
-	#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__) //添加这一句
+	#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__)
 		int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 		tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
 	_CrtSetDbgFlag(tmpFlag);

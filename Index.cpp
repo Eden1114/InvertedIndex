@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "indexCompression.h"
 #include "postingList.h"
 #include "Index.h"
 #include "Terms.h"
@@ -27,7 +26,7 @@ void Index::BSBI() {
 	File block = rootdir.firstFileInDir();
 	while (block.exists()) {
 		list<PostingList*> postinglists;
-		cout << block.getName() << endl;
+		//cout << block.getName() << endl;
 		File blockFile(outdir, block.getName());
 		if (!blockFile.exists()) {
 			if (!blockFile.createNewFile()) {
@@ -40,7 +39,7 @@ void Index::BSBI() {
 		File file = blockDir.firstFileInDir();
 
 		//输出以调试
-		cout << blockDir.getPathName() << endl;
+		//cout << blockDir.getPathName() << endl;
 
 		while (file.exists()) {
 			totalFileCount++;
@@ -126,10 +125,10 @@ void Index::BSBI() {
 		blockQueue.pop();
 		
 		string combfilename = b1.getName() + "+" + b2.getName();
-		cout << combfilename << endl;
+		//cout << combfilename << endl;
 		File combfile(outdir.getPathName(), combfilename);
 
-		cout << combfile.getPathName() << endl;
+		//cout << combfile.getPathName() << endl;
 
 		if (!combfile.exists()) {
 			if (!combfile.createNewFile()) {
@@ -138,18 +137,14 @@ void Index::BSBI() {
 			}
 		}
 
-		cout << b1.getPathName() << endl;
-		cout << b2.getPathName() << endl;
-		cout << combfile.getPathName() << endl;
+		//cout << b1.getPathName() << endl;
+		//cout << b2.getPathName() << endl;
+		//cout << combfile.getPathName() << endl;
 
 		ifstream bf1(b1.getPathName());
 		ifstream bf2(b2.getPathName());
 		ofstream mf(combfile.getPathName());
 		
-		
-
-		/////////////////////////
-		//TODO:
 		list<PostingList *> postinglists;
 		set<int> vis_termId;
 
@@ -174,13 +169,13 @@ void Index::BSBI() {
 	
 	File indexFile = blockQueue.front();
 	blockQueue.pop();
-	cout << indexFile.getPathName() << endl;
+	//cout << indexFile.getPathName() << endl;
 	File indexDeleteFile(outdir.getPathName() + "/corpus.index");
 	if (indexDeleteFile.exists()) {
 		indexDeleteFile.deleteFile();
 	}
 	bool renameflag = indexFile.renameTo(outdir.getPathName() + "/corpus.index");
-	cout << "Renameflag:" << renameflag << endl;
+	//cout << "Renameflag:" << renameflag << endl;
 
 	ofstream termWriter((outdir.getPathName()+ "/term.dict").c_str());
 	 //TODO: write  term dictionary to disc.
@@ -211,4 +206,5 @@ void Index::BSBI() {
 	}
 
 	posWriter.close();
+	cout << "索引构建完成!" << endl;
 }

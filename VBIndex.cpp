@@ -3,7 +3,7 @@
 
 VBIndex::VBIndex(void)
 {
-
+	type = 2;
 }
 
 VBIndex::~VBIndex(void)

@@ -91,7 +91,6 @@
     <ClCompile Include="BaseIndex.cpp" />
     <ClCompile Include="BasicIndex.cpp" />
     <ClCompile Include="Index.cpp" />
-    <ClCompile Include="IndexCompression.cpp" />
     <ClCompile Include="InvertedIndex.cpp" />
     <ClCompile Include="PostingList.cpp" />
     <ClCompile Include="Query.cpp" />
@@ -107,7 +106,6 @@
     <ClInclude Include="BaseIndex.h" />
     <ClInclude Include="BasicIndex.h" />
     <ClInclude Include="Index.h" />
-    <ClInclude Include="IndexCompression.h" />
     <ClInclude Include="PostingList.h" />
     <ClInclude Include="Query.h" />
     <ClInclude Include="stdafx.h" />

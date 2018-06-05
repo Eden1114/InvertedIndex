@@ -3,6 +3,7 @@
 
 BaseIndex::BaseIndex(void)
 {
+	type = 0;
 }
 
 BaseIndex::~BaseIndex(void)

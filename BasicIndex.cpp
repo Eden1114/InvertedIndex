@@ -4,7 +4,7 @@
 
 BasicIndex::BasicIndex(void)
 {
-
+	type = 1;
 }
 
 BasicIndex::~BasicIndex(void)
