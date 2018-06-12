@@ -5,14 +5,14 @@
 
 在本项目中，我们利用倒排索引和BSBI技术建立索引，并利用变长字节编码vb技术对索引文件进行压缩。
 
-##倒排索引
+## 倒排索引
 倒排索引（Inverted index），也常被称为反向索引，是一种索引方法，被用来存储在全文搜索下某个单词在一个文档或者一组文档中的存储位置的映射。它是文档检索系统中最常用的数据结构。通过倒排索引，可以根据单词快速检索到包含该单词的文档列表。
 
 ## 倒排索引中用到的数据结构
 ### Document Dictionary  
 所有的文件名存储在DocDict里面。  
 key: FileName  value: DocID
-###Term Dictionary  
+### Term Dictionary  
 TermDict保存所有文件中出现的词（空格分开）。  
 key: Term  
 value: TermID。  
