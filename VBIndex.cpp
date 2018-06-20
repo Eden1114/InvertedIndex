@@ -33,7 +33,7 @@ PostingList* VBIndex::readPosting(ifstream& in, streampos streampos) {
 	posting = new PostingList(termid, docids);
 	return posting;
 }
-
+/*
 void VBIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, set<int>& vis_termid)
 {
 	int size;
@@ -43,12 +43,12 @@ void VBIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, set<
 	{
 		termid = readInt(in);
 		n = readInt(in);
-		
+
 		if (vis_termid.count(termid)) {
 			for (PostingList * postinglist : postinglists) {
 				if (postinglist->getTermId() == termid) {
 					list<int> *list = postinglist->getList();
-					int docid = 0,temp;
+					int docid = 0, temp;
 					for (int i = 0; i < n; i++) {
 						temp = readInt(in);
 						docid += temp;
@@ -56,13 +56,12 @@ void VBIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, set<
 					}
 					break;
 				}
-
 			}
 		}
 		else {
 			vis_termid.insert(termid);
 			list<int> docids;
-			int docid = 0,temp;
+			int docid = 0, temp;
 			for (int i = 0; i < n; i++) {
 				temp = readInt(in);
 				docid += temp;
@@ -74,6 +73,47 @@ void VBIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, set<
 	}
 
 }
+*/
+
+
+
+void VBIndex::readPostings(ifstream & in, map<int, PostingList*>& postinglists)
+{
+	int size;
+	size = readInt(in);
+	int termid, n;
+	for (int i = 0; i < size; i++)
+	{
+		termid = readInt(in);
+		n = readInt(in);
+		cout << termid <<' '<< n << endl;
+		if (postinglists[termid] == NULL) {
+			list<int> docids;
+			int docid = 0, temp;
+			for (int i = 0; i < n; i++) {
+				temp = readInt(in);
+				docid += temp;
+				//cout << docid << ' ';
+				docids.push_back(docid);
+			}
+			//cout << endl;
+			PostingList * postinglist = new PostingList(termid, docids);
+			postinglists[termid] = postinglist;
+		}
+
+		else {
+			PostingList * postinglist = postinglists[termid];
+			list<int>* docids = postinglist->getList();
+			int docid = 0, temp;
+			for (int i = 0; i < n; i++) {
+				temp = readInt(in);
+				docid += temp;
+				docids->push_back(docid);
+			}
+		}
+	}
+}
+
 
 void VBIndex::writePosting(ofstream& out, PostingList *posting) {
 
@@ -85,7 +125,7 @@ void VBIndex::writePosting(ofstream& out, PostingList *posting) {
 	bool first_flag = true;
 	int predocid;
 	for (int docid : *posting->getList()) {
-		
+
 		if (first_flag) {
 			predocid = docid;
 			writeInt(docid, out);
@@ -102,17 +142,17 @@ void VBIndex::writePosting(ofstream& out, PostingList *posting) {
 	//out << endl;
 }
 
-void VBIndex::writePostings(ofstream &out, list<PostingList*> &postinglists, map<int, streampos>& postingDict)
+void VBIndex::writePostings(ofstream &out, map<int, PostingList*>& postinglists, map<int, streampos>& postingDict)
 {
 	writeInt(postinglists.size(), out);
 	//out << postinglists.size() << endl;
-	for (PostingList * postinglist : postinglists) {
+	for (auto postinglist : postinglists) {
 
 		//记录位置，便于readPosting
 		streampos streampos = out.tellp();
-		postingDict[postinglist->getTermId()] = streampos;
+		postingDict[postinglist.second->getTermId()] = streampos;
 
-		writePosting(out, postinglist);
+		writePosting(out, postinglist.second);
 	}
 }
 
@@ -155,3 +195,17 @@ int VBIndex::readInt(ifstream & in)
 	while (zero--) ret *= 128;
 	return ret;
 }
+/*
+void VBIndex::writePostings(ofstream &out, list<PostingList*> &postinglists, map<int, streampos>& postingDict)
+{
+	writeInt(postinglists.size(), out);
+	//out << postinglists.size() << endl;
+	for (PostingList * postinglist : postinglists) {
+		//记录位置，便于readPosting
+		streampos streampos = out.tellp();
+		postingDict[postinglist->getTermId()] = streampos;
+
+		writePosting(out, postinglist);
+	}
+}
+*/

@@ -6,12 +6,12 @@ using namespace std;
 
 class Terms {
 private:
-	vector<string> terms;
+	set<string> terms;
 
 public:
 	Terms(File file);
 	Terms(string line);
-	vector<string>& getTerms();
+	set<string>& getTerms();
 	~Terms();
 };
 

@@ -35,7 +35,7 @@ PostingList* BasicIndex::readPosting(ifstream& in, streampos streampos) {
 	return posting;
 }
 
-//读取整个postinglist
+/*读取整个postinglist
 void BasicIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, set<int>& vis_termid)
 {
 	int size;
@@ -70,7 +70,7 @@ void BasicIndex::readPostings(ifstream & in, list<PostingList*>& postinglists, s
 			postinglists.push_back(postinglist);
 		}
 	}
-}
+}*/
 
 //写一个postinglist
 void BasicIndex::writePosting(ofstream& out, PostingList * posting) {
@@ -90,6 +90,21 @@ void BasicIndex::writePosting(ofstream& out, PostingList * posting) {
 }
 
 //写入所有的postinglist,并构建posDict
+void BasicIndex::writePostings(ofstream & out, map<int, PostingList*>& postinglists, map<int, streampos>& postingDict)
+{
+	out << postinglists.size() << endl;
+	for (auto postinglist : postinglists) {
+
+		//记录位置，便于readPosting
+		streampos streampos = out.tellp();
+		postingDict[postinglist.second->getTermId()] = streampos;
+
+		writePosting(out, postinglist.second);
+	}
+}
+
+/*
+//写入所有的postinglist,并构建posDict
 void BasicIndex::writePostings(ofstream & out, list<PostingList*>& postinglists, map<int, streampos>& postingDict)
 {
 	out << postinglists.size() << endl;
@@ -100,5 +115,42 @@ void BasicIndex::writePostings(ofstream & out, list<PostingList*>& postinglists,
 		postingDict[postinglist->getTermId()] = streampos;
 
 		writePosting(out, postinglist);
+	}
+}
+*/
+
+void BasicIndex::readPostings(ifstream & in, map<int, PostingList*>& postinglists)
+{
+	int size;
+	in >> size;
+	//cout << size;
+	int termid, n;
+	for (int i = 0; i < size; i++)
+	{
+		in >> termid >> n;
+		//cout << termid << ' ' << n << endl;
+		
+		if (postinglists[termid] == NULL) {
+			//cout << "111111111111" << endl;
+			list<int> docids;
+			int docid = 0;
+			for (int i = 0; i < n; i++) {
+				in >> docid;
+				docids.push_back(docid);
+			}
+			PostingList * postinglist = new PostingList(termid, docids);
+			postinglists[termid] = postinglist;
+		}
+
+		else {
+			//cout << "222222222222222" << endl;
+			PostingList * postinglist = postinglists[termid];
+			list<int>* docids = postinglist->getList();
+			int docid = 0;
+			for (int i = 0; i < n; i++) {
+				in >> docid;
+				docids->push_back(docid);
+			}
+		}
 	}
 }

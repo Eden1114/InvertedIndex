@@ -21,7 +21,11 @@ public:
 	PostingList(int termId, list<int> &list);
 	PostingList(int termId);
 	~PostingList(void);
-
 	int getTermId();
 	list<int> * getList();
+
+	bool operator()(PostingList &a, PostingList &b)
+	{
+		return a.getTermId() < b.getTermId();
+	}
 };

@@ -31,9 +31,8 @@ AppWizard uses "TODO:" comments to indicate parts of the source code you
 should add to or customize.
 
 /////////////////////////////////////////////////////////////////////////////
-1.BasicIndex存储的数据格式约定
-第一行存postinglist的个数
-然后以下，每两行存一个postinglist
-	第一行存 termId 和 docId的个数
-	第二行存 docids
-所有的整数以空格分隔
+InvertedIndex（倒排索引）是搜索引擎构建中重要的内容。
+
+
+使用方法
+

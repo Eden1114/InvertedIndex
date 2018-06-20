@@ -78,7 +78,7 @@ void Query::execute()
 	{
 		ifstream posReader((inputDir.getPathName() + "/pos.dict").c_str());
 		int termid;
-		long long pos;
+		long pos;
 		
 		while (posReader >> termid >> pos) {
 			posDict[termid] = pos;

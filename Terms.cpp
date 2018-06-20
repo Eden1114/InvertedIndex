@@ -10,7 +10,7 @@ Terms::Terms(File file)
 		getline(reader, line);
 		size_t len = line.length() + 1;
 		char * delim = " ";
-		char * str = new char[len]();
+		char * str = new char[len+10]();
 		//memset(str, 0, sizeof(char) * len);
 		memcpy(str, line.c_str(), len);
 		for (size_t i = 0; i < len; i++) {
@@ -22,7 +22,7 @@ Terms::Terms(File file)
 		char * p = strtok(str, delim);
 		while (p && p - str < len) {
 			string term = p;
-			terms.push_back(term);
+			terms.insert(term);
 			p = strtok(NULL, delim);
 		}
 		delete[] str;
@@ -33,7 +33,7 @@ Terms::Terms(string line)
 {
 	size_t len = line.length()+1;
 	const char * delim = " ";
-	char * str = new char[len]();
+	char * str = new char[len+10]();
 	memcpy(str, line.c_str(), len);
 
 	for (size_t i = 0; i < len; i++) {
@@ -48,14 +48,14 @@ Terms::Terms(string line)
 	p = strtok(str, delim);
 	while (p != NULL && p - str < len) {
 		string term = p;
-		terms.push_back(term);
+		terms.insert(term);
 		p = strtok(NULL, delim);
 	}
 
 	delete[] str;
 }
 
-vector<string>& Terms::getTerms() {
+set<string>& Terms::getTerms() {
 	return terms;
 }
 

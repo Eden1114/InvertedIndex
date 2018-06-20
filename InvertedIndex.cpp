@@ -87,17 +87,15 @@ void ExecuteQuery(string indexTpye, string indexPath) {
 
 int main(int argc, char * argv[])
 {
-	/////////////////ÄÚ´æÐ¹Â©¼ì²â
+	/*///////////////ÄÚ´æÐ¹Â©¼ì²â
 	#ifdef WIN32
 	#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__)
 		int tmpFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 		tmpFlag |= _CRTDBG_LEAK_CHECK_DF;
 	_CrtSetDbgFlag(tmpFlag);
 	#endif
-	/////////////////
+	*/////////////////
 
-
-	/* Parse command line */
 	if (argc != 4 && argc != 5) {
 		cerr << "Usage 1:  Index  Basic|VB data_dir output_dir" << endl;
 		cerr << "Usage 2:  Query Basic|VB index_dir" << endl;
@@ -113,7 +111,6 @@ int main(int argc, char * argv[])
 	}
 	else {
 		cerr << "Comamand must be Index or Query!" << endl;
-		system("pause");
 	}
 	system("pause");
 }

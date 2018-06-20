@@ -12,14 +12,13 @@ class Index {
 private:
 	//Term id -> (position in index file, doc frequency) dictionary
 	map<int, streampos> postingDict;
-
 	// Doc name -> doc id dictionary
 	map<string, int> docDict;
 	// Term -> term id dictionary
 	map<string, int> termDict;
 
 	// Block queue
-	queue<File> blockQueue;
+	deque<File> blockQueue;
 
 	// Total file counter
 	int totalFileCount;
