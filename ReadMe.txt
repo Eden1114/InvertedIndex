@@ -31,8 +31,5 @@ AppWizard uses "TODO:" comments to indicate parts of the source code you
 should add to or customize.
 
 /////////////////////////////////////////////////////////////////////////////
-InvertedIndex（倒排索引）是搜索引擎构建中重要的内容。
 
-
-使用方法
 
