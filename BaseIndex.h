@@ -4,15 +4,15 @@
 using namespace std;
 
 /*
-	ÕâÊÇÒ»¸ö¸øBasicIndexºÍVBIndex¼Ì³ĞµÄÀà
-	³éÏóÁË PostingList µÄ¶ÁĞ´º¯Êı
-	²¢ÇÒÈ«²¿ÓÃ´¿Ğéº¯ÊıÊµÏÖ
+	è¿™æ˜¯ä¸€ä¸ªç»™BasicIndexå’ŒVBIndexç»§æ‰¿çš„ç±»
+	æŠ½è±¡äº† PostingList çš„è¯»å†™å‡½æ•°
+	å¹¶ä¸”å…¨éƒ¨ç”¨çº¯è™šå‡½æ•°å®ç°
 */
 class BaseIndex {
 public:
 	int type;
 	BaseIndex(void);
-	~BaseIndex(void);
+	virtual ~BaseIndex(void);
 
 	//virtual void readPostings(ifstream& in, list<PostingList *>& postinglists, set<int>& vis_termid)=0;
 	//virtual void writePostings(ofstream &out, list<PostingList*>& postinglists, map<int, streampos>& postingDict) = 0;
